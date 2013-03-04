@@ -33,6 +33,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('environment')
                     ->info('Defines the Gearman environment')
+                    ->defaultValue('default')
                 ->end()
             ->end()
         ;
