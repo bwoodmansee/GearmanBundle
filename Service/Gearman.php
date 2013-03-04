@@ -26,6 +26,7 @@ class Gearman
      * @param boolean             $background Whether the job should be run in the background
      * @param int                 $priority   What priority the job should be run as
      * @param string
+     * @return GearmanJobStatus Object containing the job handle and return code for the
      */
     public function addJob(
         GearmanJobInterface $job,
@@ -57,6 +58,6 @@ class Gearman
             }
         }
 
-        return $jobHandle;
+        return new GearmanJobStatus($jobHandle, $this->gearmanClient->returnCode());
     }
 }
