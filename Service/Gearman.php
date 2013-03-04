@@ -2,7 +2,11 @@
 
 namespace Hautelook\GearmanBundle\Service;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 use Hautelook\GearmanBundle\GearmanJobInterface;
+use Hautelook\GearmanBundle\Event\BindWorkloadDataEvent;
+use Hautelook\GearmanBundle\Event\GearmanEvents;
 
 /**
  * @author Baldur Rensch <baldur.rensch@hautelook.com>
@@ -11,9 +15,10 @@ class Gearman
 {
     protected $gearmanClient;
 
-    public function __construct(\GearmanClient $gearmanClient)
+    public function __construct(\GearmanClient $gearmanClient, EventDispatcher $dispatcher)
     {
         $this->gearmanClient = $gearmanClient;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -33,7 +38,11 @@ class Gearman
         $priority = GearmanJobInterface::PRIORITY_NORMAL
     ) {
         $functionToCall = $job->getFunctionName();
+        $event = new BindWorkloadDataEvent($job);
+        $this->dispatcher->dispatch(GearmanEvents::BIND_WORKLOAD, $event);
         $workload       = $job->getWorkload();
+
+        $workload = serialize($workload);
 
         if ($background) {
             if (GearmanJobInterface::PRIORITY_LOW == $priority) {
@@ -62,5 +71,23 @@ class Gearman
         }
 
         return $jobHandle;
+    }
+
+    /**
+     * Sets the Gearman environment.
+     * @param string $environment Gearman Environment
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * Return Gearman Environment.
+     * @return string Gearman Environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
     }
 }

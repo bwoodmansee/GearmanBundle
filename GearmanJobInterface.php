@@ -13,7 +13,8 @@ interface GearmanJobInterface
 
     /**
      * This functions needs to return a string with all parameters that need to be passed
-     * on to the Gearman server, so the serialized workload
+     * on to the Gearman server, so the workload.  
+     * The value should not yet be serialized.
      * @return string
      */
     public function getWorkload();
