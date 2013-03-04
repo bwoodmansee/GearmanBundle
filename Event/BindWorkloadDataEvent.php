@@ -10,11 +10,13 @@ class BindWorkloadDataEvent extends Event
 {
     protected $job;
 
-    public function __construct(GearmanJobInterface $job) {
+    public function __construct(GearmanJobInterface $job)
+    {
         $this->job = $job;
     }
 
-    public function getJob() {
+    public function getJob()
+    {
         return $this->job;
     }
 }
