@@ -8,6 +8,9 @@ namespace Hautelook\GearmanBundle\Service;
  */
 class GearmanJobStatus
 {
+    protected $handle;
+    protected $returnCode;
+
     /**
      * Create a GearmanJobStatus object.  Store the job handle and return code for the task.
      * @param string $handle     Gearman job handle
