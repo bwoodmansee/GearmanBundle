@@ -2,6 +2,8 @@
 
 namespace Hautelook\GearmanBundle\Service;
 
+use Hautelook\GearmanBundle\GearmanJobInterface;
+
 /**
  * Expose details about the Gearman job handle returned after the task is scheduled to run
  * @author Brandon Woodmansee <brandon.woodmansee@hautelook.com>
@@ -13,11 +15,13 @@ class GearmanJobStatus
 
     /**
      * Create a GearmanJobStatus object.  Store the job handle and return code for the task.
+     * @param GearmanJobInterface $job The job
      * @param string $handle     Gearman job handle
      * @param int $returnCode Result of GearmanClient::returnCode()
      */
     public function __construct($handle, $returnCode)
     {
+
         $this->handle = $handle;
         $this->returnCode = $returnCode;
     }

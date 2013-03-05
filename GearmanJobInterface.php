@@ -2,6 +2,8 @@
 
 namespace Hautelook\GearmanBundle;
 
+use Hautelook\GearmanBundle\Service\GearmanJobStatus;
+
 /**
  * @author Baldur Rensch <baldur.rensch@hautelook.com>
  */
@@ -23,4 +25,16 @@ interface GearmanJobInterface
      * @return string
      */
     public function getFunctionName();
+
+    /**
+     * This function stores Gearman job status information after a job has been added.
+     * @return GearmanJobStatus Gearman job handle and return code
+     */
+    public function getStatus();
+
+    /**
+     * Set the Gearman Job Status.
+     * @param GearmanJobStatus $status
+     */
+    public function setStatus(GearmanJobStatus $status);
 }

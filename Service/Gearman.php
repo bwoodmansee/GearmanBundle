@@ -29,7 +29,7 @@ class Gearman
      * @return GearmanJobStatus Object containing the job handle and return code for the
      */
     public function addJob(
-        GearmanJobInterface $job,
+        GearmanJobInterface &$job,
         $background = true,
         $priority = GearmanJobInterface::PRIORITY_NORMAL
     ) {
@@ -58,6 +58,9 @@ class Gearman
             }
         }
 
-        return new GearmanJobStatus($jobHandle, $this->gearmanClient->returnCode());
+        $status = new GearmanJobStatus($jobHandle, $this->gearmanClient->returnCode());
+        $job->setStatus($status);
+
+        return $status->success();
     }
 }
