@@ -19,24 +19,23 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('hautelook_gearman');
 
         $rootNode
-            ->children()
-                ->arrayNode('servers')
-                    ->info('Defines the gearman servers')
-                    ->useAttributeAsKey('name')
-                    ->requiresAtLeastOneElement()
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('host')->end()
-                            ->scalarNode('port')->end()
-                        ->end()
+        ->children()
+            ->arrayNode('servers')
+                ->info('Defines the gearman servers')
+                ->useAttributeAsKey('name')
+                ->requiresAtLeastOneElement()
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('host')->end()
+                        ->scalarNode('port')->end()
                     ->end()
                 ->end()
-                ->scalarNode('environment')
-                    ->info('Defines the Gearman environment')
-                    ->defaultValue('default')
-                ->end()
             ->end()
-        ;
+            ->scalarNode('environment')
+                ->info('Defines the Gearman environment')
+                ->defaultValue('default')
+            ->end()
+        ->end();
 
         return $treeBuilder;
     }

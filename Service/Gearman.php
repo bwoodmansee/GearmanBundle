@@ -3,7 +3,6 @@
 namespace Hautelook\GearmanBundle\Service;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 use Hautelook\GearmanBundle\GearmanJobInterface;
 use Hautelook\GearmanBundle\Event\BindWorkloadDataEvent;
 use Hautelook\GearmanBundle\Event\GearmanEvents;
@@ -13,8 +12,22 @@ use Hautelook\GearmanBundle\Event\GearmanEvents;
  */
 class Gearman
 {
+    /**
+     * @var \GearmanClient
+     */
     protected $gearmanClient;
 
+    /**
+     * @var Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    protected $dispatcher;
+
+    protected $environment;
+
+    /**
+     * @param \GearmanClient  $gearmanClient
+     * @param EventDispatcher $dispatcher
+     */
     public function __construct(\GearmanClient $gearmanClient, EventDispatcher $dispatcher)
     {
         $this->gearmanClient = $gearmanClient;
@@ -22,15 +35,11 @@ class Gearman
     }
 
     /**
-     *
-     * @param GearmanJobInterface $job
-     */
-    /**
      * This adds a job to the Gearman queue.
      * @param GearmanJobInterface $job        The job to be done
      * @param boolean             $background Whether the job should be run in the background
      * @param int                 $priority   What priority the job should be run as
-     * @param string
+     * @return string
      */
     public function addJob(
         GearmanJobInterface $job,
@@ -38,10 +47,11 @@ class Gearman
         $priority = GearmanJobInterface::PRIORITY_NORMAL
     ) {
         $functionToCall = $job->getFunctionName();
+
         $event = new BindWorkloadDataEvent($job);
         $this->dispatcher->dispatch(GearmanEvents::BIND_WORKLOAD, $event);
-        $workload       = $job->getWorkload();
 
+        $workload = $job->getWorkload();
         $workload = serialize($workload);
 
         if ($background) {

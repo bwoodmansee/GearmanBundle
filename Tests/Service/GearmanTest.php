@@ -13,6 +13,7 @@ class GearmanTest extends \PHPUnit_Framework_TestCase
 {
     protected $gearmanClient;
     protected $gearmanService;
+    protected $eventDispatcher;
 
     protected function setUp()
     {
@@ -20,7 +21,10 @@ class GearmanTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $this->gearmanClient->addServer('localhost', 4730);
 
-        $this->gearmanService = new GearmanService($this->gearmanClient);
+        $this->eventDispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcher')
+            ->getMock();
+
+        $this->gearmanService = new GearmanService($this->gearmanClient, $this->eventDispatcher);
     }
 
     public function testDefaultPriorityAndBackground()
@@ -28,7 +32,7 @@ class GearmanTest extends \PHPUnit_Framework_TestCase
         $job = new TestJob();
 
         $this->gearmanClient->expects($this->once())->method('doBackground')
-            ->with('testfunction', 'workload')
+            ->with('testfunction', serialize('workload'))
             ->will($this->returnValue('jobHandle'));
 
         $returnValue = $this->gearmanService->addJob($job);
@@ -63,7 +67,7 @@ class GearmanTest extends \PHPUnit_Framework_TestCase
         $job = new TestJob();
 
         $this->gearmanClient->expects($this->once())->method($functionToCall)
-            ->with('testfunction', 'workload')
+            ->with('testfunction', serialize('workload'))
             ->will($this->returnValue('jobHandle'));
 
         $returnValue = $this->gearmanService->addJob($job, $background, $priority);
